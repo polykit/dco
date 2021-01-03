@@ -9,6 +9,7 @@ This repository contains the schematics and source code for an Arduino Nano base
 - add MIDI input
 - add voltage control
 - control multiple oscillators with one Arduino
+- additional waveshaping
 
 ## References
 

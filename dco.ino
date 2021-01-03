@@ -35,7 +35,7 @@ void setFrequency(float frequency) {
     // calculate accurate number of clock cycles, depends on frequency and amount of overflows
     nextTimer = round(cycles-180.0+(frequency*0.015)-floor(cycles/65535.0)*120.0);
     // calculate voltage for amplitude compensation
-    mcp.setChannelValue(MCP4728_CHANNEL_A, (frequency*0.9)-(180/frequency), MCP4728_VREF_INTERNAL, MCP4728_GAIN_2X);
+    mcp.setChannelValue(MCP4728_CHANNEL_A, (frequency*0.4)-(250.0/frequency), MCP4728_VREF_INTERNAL, MCP4728_GAIN_2X);
 }
 
 void setMidiNote(int note) {
