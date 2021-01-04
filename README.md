@@ -7,7 +7,8 @@ This repository contains the schematics and source code for an Arduino Nano base
 ## Todo
 
 - add MIDI input
-- add voltage control
+- ~~add voltage control~~
+- add proper voltage control
 - control multiple oscillators with one Arduino
 - additional waveshaping
 
@@ -26,3 +27,5 @@ https://ww1.microchip.com/downloads/en/DeviceDoc/22187E.pdf
 https://www.robotshop.com/community/forum/t/arduino-101-timers-and-interrupts/13072
 
 http://newt.phys.unsw.edu.au/jw/notes.html
+
+http://www.thebox.myzen.co.uk/Tutorial/Protection.html

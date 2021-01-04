@@ -1,6 +1,8 @@
 #include <Adafruit_MCP4728.h>
 #include <Wire.h>
- 
+
+#define ANALOG_CV_ADJUST_FACTOR 0.901;
+
 Adafruit_MCP4728 mcp;
  
 unsigned long counterLeft = 0, nextTimer;
@@ -24,10 +26,13 @@ void setup() {
 }
 
 void loop() {
-  for (int i=21; i<109; i++) {
-    setMidiNote(i);
-    delay(1000);
-  }
+  readAnalogCV();
+}
+
+void readAnalogCV() {
+  float cv = analogRead(A0)*(5.0/1023.0)*ANALOG_CV_ADJUST_FACTOR;
+  float freq = 261.6256*pow(2.0, cv-3);
+  setFrequency(freq);
 }
 
 void setFrequency(float frequency) {
@@ -54,8 +59,7 @@ void setCounter(unsigned long val) {
 }
 
 // called on 16 bit overflow (>65535)
-ISR(TIMER1_OVF_vect)        
-{
+ISR(TIMER1_OVF_vect) {
   if (counterLeft == 0) {
     // set pin D9 to high
     PORTB |= (1 << PB1);
