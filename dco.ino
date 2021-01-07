@@ -1,15 +1,31 @@
-#include <Adafruit_MCP4728.h>
 #include <Wire.h>
+#include <ADS1115.h>
+#include <Adafruit_MCP4728.h>
 
-#define ANALOG_CV_ADJUST_FACTOR 0.901;
+#define FREQ_CYCLES_ADJUST 140.0
+#define HIGH_FREQ_CYCLES_ADJUST -0.04
+#define ANALOG_CV_ADJUST_FACTOR 2.0
+#define OCTAVE_OFFSET -5.0
 
+ADS1115 ads;
 Adafruit_MCP4728 mcp;
  
 unsigned long counterLeft = 0, nextTimer;
 
 void setup() {
-  mcp.begin();
+  // reset pin to output
   pinMode(9, OUTPUT);
+
+  // initialize adc
+  ads.begin();
+  ads.set_data_rate(ADS1115_DATA_RATE_860_SPS);
+  ads.set_mode(ADS1115_MODE_CONTINUOUS);
+  ads.set_mux(ADS1115_MUX_GND_AIN0);
+  ads.set_pga(ADS1115_PGA_TWO_THIRDS);
+  ads.trigger_sample();
+
+  // initialize dac
+  mcp.begin();
 
   // disable interrupts
   cli();
@@ -30,15 +46,15 @@ void loop() {
 }
 
 void readAnalogCV() {
-  float cv = analogRead(A0)*(5.0/1023.0)*ANALOG_CV_ADJUST_FACTOR;
-  float freq = 261.6256*pow(2.0, cv-3);
+  float cv = ads.read_sample_float()*ANALOG_CV_ADJUST_FACTOR;
+  float freq = 261.6256*pow(2.0, cv+OCTAVE_OFFSET);
   setFrequency(freq);
 }
 
 void setFrequency(float frequency) {
     float cycles = 16000000.0/frequency;
     // calculate accurate number of clock cycles, depends on frequency and amount of overflows
-    nextTimer = round(cycles-180.0+(frequency*0.015)-floor(cycles/65535.0)*120.0);
+    nextTimer = round(cycles-FREQ_CYCLES_ADJUST+(frequency*HIGH_FREQ_CYCLES_ADJUST)-floor(cycles/65535.0)*120.0);
     // calculate voltage for amplitude compensation
     mcp.setChannelValue(MCP4728_CHANNEL_A, (frequency*0.4)-(250.0/frequency), MCP4728_VREF_INTERNAL, MCP4728_GAIN_2X);
 }
