@@ -2,6 +2,8 @@
 
 This repository contains the schematics and source code for an Arduino Nano based DCO (digitally controlled analog oscillator). Schematics are roughly based on the Juno 106, voltage for amplitude compensation comes from the DAC MCP4728. It produces a highly accurate frequency 5Vpp ramp over several octaves on the output. For frequency control it uses timer interrupts on the full 16 mhz range. The reset signal is sent when the 16-bit counter overflows and also handles multiple overflows on low frequencies. Voltage control comes from a ADS1115 16-bit ADC and ranges from 0-10V.
 
+[There is also a design based on the Raspberry Pi Pico which is even more precise and offers MIDI input and polyphony with up to 6 voices.](https://github.com/polykit/pico-dco)
+
 ![Polykit DCO](dco.png)
 
 ## Todo
